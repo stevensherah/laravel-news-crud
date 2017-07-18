@@ -1,0 +1,56 @@
+<script type="text/template" id="tplPostShortItem">
+	<section class="clearfix news-all-extend__item news-all__item-m" data-id="<%= post.id %>" itemscope
+			 itemtype="http://schema.org/NewsArticle">
+
+		<div class="col-xs-12 col-sm-3">
+			<a rel="index" href="<%= post.url %>" itemprop="url">
+				<img src="{{ asset('vendor/news-crud/img/no-image.jpg') }}" alt="<%= post.name %>"
+					 class="news-all-extend__img" itemprop="image">
+			</a>
+		</div>
+
+		<div class="col-xs-12 col-sm-9">
+
+			<h2 class="news-all-extend__title">
+				<a rel="index" href="<%= post.url %>" class="news-all-extend__title-i" itemprop="url name"><%= post.name %></a>
+			</h2>
+
+			<div class="news-all-extend__info">
+				<time class="news-all-extend__label-date" datetime="<%= post.published_at %>" itemprop="datePublished"><%= post.published_safe %></time>
+
+				<span class="text-muted tooltip-info" data-toggle="tooltip" itemprop="author" title="{{ trans('news::post.show.author') }}"><%= post.user.name %></span>
+
+				<a rel="nofollow" class="news-all-extend__category tooltip-info" data-toggle="tooltip" href="<%= post.category.url %>" title="{{ trans('news::post.show.category') }}"><%=
+					post.category.name %></a>
+			</div>
+
+			<div class="news-all-extend__description" itemprop="description"><%= post.summary %></div>
+
+			<ul class="tags-list tags-list_inline" role="group" aria-label="tags">
+				<% _.map(post.tags, function(item, i){ %>
+				<li class="tags-list__item">
+					<a rel="tag" href="<%= item.url %>"
+					   title="{{ trans('news::post.index.tag_title') }}"
+					   class="tag<% if( item.is_active ){ %> tag_active<% } %>"><%= item.name %></a>
+				</li>
+				<% }); %>
+			</ul>
+
+			<% if (post.manage_buttons){ %>
+			<div class="btn-group pull-right">
+				<% if (auth_check){ %>
+				<a href="<%= post.manage_buttons.edit %>"
+				   class="btn btn-xs btn-success">
+					{{ trans('news::post.index.btn_post_edit') }}
+				</a>
+				<% } %>
+				<button type="button"
+						class="btn btn-danger btn-xs post-btn-delete">
+					{{ trans('news::post.index.btn_post_delete') }}
+				</button>
+			</div>
+			<% } %>
+
+		</div>
+	</section>
+</script>

@@ -1,0 +1,69 @@
+{% extends 'news::layouts.default' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-xs-12">
+                {{ include('news::common.breadcrumb') }}
+            </div>
+
+            <section class="col-xs-12 col-sm-12 col-md-8">
+
+                {% if session('messages') -%}
+                    {% import 'news::common.macros.alert_common' as alert_tpl %}
+                    {% for message in session('messages') %}
+                        {{ alert_tpl.alert(message) }}
+                    {% endfor %}
+                    <div class="clearfix"></div>
+                {% endif %}
+
+                <h1 class="h1 page-header">{{ trans('news::users.index.name') }}</h1>
+
+                {% if errors.any %}
+                    {% import 'news::common.macros.alert_error' as alert_error %}
+                    {% for error in errors.all %}
+                        {{ alert_error.alert(error) }}
+                    {% endfor %}
+                {% endif %}
+
+                {% if users.isNotEmpty %}
+
+                    {% set items_per_column = (users.count / 3)|round(0, 'ceil') %}
+                    {% set columns = users.chunk(items_per_column) %}
+
+                    <div class="row">
+                        {% for column in columns %}
+                            <div class="col-xs-4">
+                                <ul>
+                                    {% for user in column -%}
+                                        <li><a class="header-categories__link"
+                                               href="{{ user.url }}">{{ user.name }}</a></li>
+                                    {% endfor -%}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if users.previousPageUrl or users.nextPageUrl -%}
+                        <hr>
+                        {% import 'news::common.pagination.macro_paginator' as pagination %}
+                        {{ pagination.navigation(users) }}
+                    {% endif %}
+
+                {% endif %}
+
+
+
+            </section>
+
+            <aside class="col-xs-12 col-sm-12 col-md-4">
+
+                {% include('news::common.tags_list') %}
+
+            </aside>
+        </div>
+    </div>
+
+{% endblock %}

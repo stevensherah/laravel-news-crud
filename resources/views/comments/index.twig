@@ -1,0 +1,60 @@
+{% extends 'news::layouts.default' %}
+
+{% block content %}
+
+	<div class="container">
+		<div class="row">
+
+			<div class="col-xs-12">
+                {{ include('news::common.breadcrumb') }}
+			</div>
+
+			<section class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2">
+
+                {% if session('messages') -%}
+                    {% import 'news::common.macros.alert_common' as alert_tpl %}
+                    {% for message in session('messages') %}
+                        {{ alert_tpl.alert(message) }}
+                    {% endfor %}
+					<div class="clearfix"></div>
+                {% endif %}
+
+				<h4 class="h1 page-header">{{ category_name }}</h4>
+
+				{% if errors.any %}
+					{% import 'news::common.macros.alert_error' as alert_error %}
+					{% for error in errors.all %}
+						{{ alert_error.alert(error) }}
+					{% endfor %}
+				{% endif %}
+
+				{% if comments.isNotEmpty -%}
+					{% import 'news::comments.macro_comment' as comment_template %}
+					<div class="comment-list">
+						{% for item in comments -%}
+							{{ comment_template.comment(item) }}
+						{% endfor %}
+					</div>
+				{% else %}
+					{{ include('news::common.alert_warning', {message: trans('news::comments.result_is_empty')}) }}
+				{% endif %}
+
+				{% if comments.previousPageUrl or comments.nextPageUrl -%}
+					{{ include('news::common.pagination.comments_paginator', {paginator: comments}) }}
+				{% endif %}
+
+			</section>
+
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block footer_tpl %}
+	{% include('news::comments.template_js_comment') %}
+	{% include('news::common.pagination.template_js_pages') %}
+	{% include('news::common.pagination.template_js_btn_next_empty') %}
+	{% include('news::common.pagination.template_js_btn_next_link') %}
+	{% include('news::common.pagination.template_js_btn_prev_empty') %}
+	{% include('news::common.pagination.template_js_btn_prev_link') %}
+{% endblock %}

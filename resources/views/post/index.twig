@@ -1,0 +1,76 @@
+{% extends 'news::layouts.default' %}
+
+{% block content %}
+
+	<div class="container">
+		<div class="row">
+
+			<section class="col-xs-12 col-sm-12 col-md-8">
+
+				{{ include('news::common.breadcrumb') }}
+
+                {% if session('messages') -%}
+                    {% import 'news::common.macros.alert_common' as alert_tpl %}
+                    {% for message in session('messages') %}
+                        {{ alert_tpl.alert(message) }}
+                    {% endfor %}
+					<div class="clearfix"></div>
+                {% endif %}
+
+				{% if auth.check %}
+					<a href="{{ route('news.create', [], false) }}" class="btn btn-success pull-right">
+						<i class="icon-plus" aria-hidden="true"></i>
+						<span>{{ trans('news::post.index.btn_post_create') }}</span>
+					</a>
+				{% endif %}
+
+				<h1 class="h1 page-header">{{ trans('news::post.index.name') }}</h1>
+
+				{% if errors.any %}
+
+					{% import 'news::common.macros.alert_error' as alert_error %}
+
+					{% for error in errors.all %}
+						{{ alert_error.alert(error) }}
+					{% endfor %}
+				{% endif %}
+
+				{% if posts.isNotEmpty -%}
+					<div id="news-all" class="news-all-extend" data-current="news.index"
+						 data-url-post-delete="{{ route('api.post.destroy', [], false) }}">
+
+						{% import 'news::post.macro_post_short_extend' as post_template %}
+
+						{% for post in posts -%}
+							{{ post_template.extend(post, null, auth.check) }}
+						{% endfor -%}
+					</div>
+				{% else %}
+					{{ include('news::common.alert_warning', {message: trans('news::post.result_is_empty')}) }}
+				{% endif %}
+
+				{% if posts.previousPageUrl or posts.nextPageUrl -%}
+					{% import 'news::common.pagination.macro_paginator' as pagination %}
+					{{ pagination.navigation(posts, route('api.post.paginate', [], false)) }}
+				{% endif %}
+
+			</section>
+
+			<aside class="col-xs-12 col-sm-12 col-md-4">
+
+				{{ include('news::common.tags_list') }}
+
+			</aside>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block footer_tpl %}
+	{% include('news::post.template_js_post_short') %}
+	{% include('news::common.pagination.template_js_pages') %}
+	{% include('news::common.pagination.template_js_btn_next_empty') %}
+	{% include('news::common.pagination.template_js_btn_next_link') %}
+	{% include('news::common.pagination.template_js_btn_prev_empty') %}
+	{% include('news::common.pagination.template_js_btn_prev_link') %}
+{% endblock %}

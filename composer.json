@@ -1,0 +1,33 @@
+{
+  "name": "sevenpluss/laravel-news-crud",
+  "description": "CRUD news, comments for Laravel 5.4",
+  "keywords": ["php", "Laravel", "CRUD"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Vlad Radchenko",
+      "email": "westen7ua@gmail.com"
+    }
+  ],
+  "version": "1.0.0",
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.1.0",
+    "barryvdh/laravel-debugbar": "^2.4",
+    "barryvdh/laravel-ide-helper": "^2.4",
+    "doctrine/dbal": "^2.5",
+    "rcrowe/twigbridge": "^0.9.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Sevenpluss\\NewsCrud\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Sevenpluss\\NewsCrud\\NewsCrudServiceProvider"
+      ]
+    }
+  }
+}

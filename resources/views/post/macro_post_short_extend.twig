@@ -1,0 +1,68 @@
+{% macro extend(post, tag_slug, auth_check) %}
+    <section class="clearfix news-all-extend__item news-all__item-m" data-id="{{ post.id }}" itemscope
+             itemtype="http://schema.org/NewsArticle">
+
+        <div class="col-xs-12 col-sm-3">
+            <a rel="index" href="{{ post.url }}" itemprop="url">
+                <img src="{{ asset('vendor/news-crud/img/no-image.jpg') }}" alt="{{ post.name }}"
+                     class="news-all-extend__img" itemprop="image">
+            </a>
+        </div>
+
+        <div class="col-xs-12 col-sm-9">
+
+            <h2 class="news-all-extend__title">
+                <a rel="index" href="{{ post.url }}" class="news-all-extend__title-i"
+                   itemprop="url name">
+                    {{ post.name }}
+                </a>
+            </h2>
+
+            <div class="news-all-extend__info">
+                <time class="news-all-extend__label-date" datetime="{{ post.published_at.toIso8601String }}"
+                      itemprop="datePublished">{{ post.published_safe }}</time>
+
+                {% if post.user -%}
+                    <span class="text-muted tooltip-info" itemprop="author"
+                          title="{{ trans('news::post.show.author') }}"
+                          data-toggle="tooltip">{{ post.user.name }}</span>
+                {% endif %}
+
+                {% if post.category -%}
+                    <a rel="nofollow" class="news-all-extend__category tooltip-info"
+                       href="{{ post.category.url }}"
+                       title="{{ trans('news::post.show.category') }}" data-toggle="tooltip">{{ post.category.name }}</a>
+                {% endif %}
+            </div>
+
+            <div class="news-all-extend__description" itemprop="description">
+                {{ post.summary }}
+            </div>
+
+            {% if post.manage_buttons -%}
+                <div class="btn-group pull-right">
+                    {% if auth_check -%}
+                        <a href="{{ post.manage_buttons.edit }}" class="btn btn-xs btn-success">
+                            {{ trans('news::post.index.btn_post_edit') }}
+                        </a>
+                    {% endif -%}
+                    <button type="button" class="btn btn-xs btn-danger post-btn-delete">
+                        {{ trans('news::post.index.btn_post_delete') }}
+                    </button>
+                </div>
+            {% endif %}
+
+            {% if post.tags -%}
+                <ul class="tags-list tags-list_inline" role="group" aria-label="tags">
+                    {% for tag in post.tags -%}
+                        <li class="tags-list__item">
+                            <a rel="tag" href="{{ tag.url }}" title="{{ trans('news::post.index.tag_title') }}"
+                               class="tag{% if tag.getIsActive(tag_slug) %} tag_active{% endif %}">{{ tag.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+        </div>
+    </section>
+{% endmacro extend %}

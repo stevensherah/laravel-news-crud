@@ -1,0 +1,54 @@
+{% extends 'news::layouts.default' %}
+
+{% block content %}
+
+	<div class="container">
+		<div class="row">
+
+			<div class="col-xs-12">
+                {{ include('news::common.breadcrumb') }}
+			</div>
+
+			<section class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2">
+
+				<h1 class="h1 page-header">{{ trans('news::tags.index.name') }}</h1>
+
+				{% if errors.any %}
+					{% for error in errors.all %}
+						<div class="alert alert-danger alert-dismissible" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+										aria-hidden="true">&times;</span></button>
+							{{ error }}
+						</div>
+					{% endfor %}
+				{% endif %}
+
+				{% if tags.isNotEmpty -%}
+					<ul class="tags-list" role="group" aria-label="tags">
+                        {% for tag in tags -%}
+							<li class="tags-list__item">
+								<a rel="tag" href="{{ tag.url }}"
+								   class="tag tags-list__tag{% if active and active == tag.slug %} tag_active{% endif %}">{{ tag.name }}</a>
+							</li>
+                        {% endfor -%}
+					</ul>
+				{% else %}
+					{{ include('news::common.alert_warning', {message: trans('news::tags.index.tags_is_empty')}) }}
+				{% endif %}
+
+
+
+			</section>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block footer_tpl %}
+	{% include('news::post.template_js_post_short') %}
+	{% include('news::common.pagination.template_js_pages') %}
+	{% include('news::common.pagination.template_js_btn_next_empty') %}
+	{% include('news::common.pagination.template_js_btn_next_link') %}
+	{% include('news::common.pagination.template_js_btn_prev_empty') %}
+	{% include('news::common.pagination.template_js_btn_prev_link') %}
+{% endblock %}
