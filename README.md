@@ -55,7 +55,7 @@ Ok, next files from the box is not touched.
 php artisan vendor:publish
 ```
 
-#### 4 run the migration tables for database 
+#### 4 run the migration tables for database
 
 ```shell
 php artisan migrate 
